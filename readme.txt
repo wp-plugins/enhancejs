@@ -4,7 +4,7 @@ Donate link: http://www.ramoonus.nl
 Tags: enhance, enhancejs, javascript
 Requires at least: 3.2.0
 Tested up to: 3.0.0
-Stable tag: 1.0.0
+Stable tag: 0.1.0
 
 JavaScript framework designed to improve the application of Progressive Enhancement by first testing browser capabilities for key Javascript and CSS support before applying advanced styles and scripts to the page.
 == Description ==

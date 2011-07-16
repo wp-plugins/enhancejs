@@ -3,7 +3,7 @@
 Plugin Name: EnhanceJS
 Plugin URI: http://www.ramoonus.nl/wordpress/enhancejs/
 Description: A polyfill for the Adobe's CSS3 proposal for Text enhances (Tested + Works on Chrome, Safari, Firefox, IE 8+) 
-Version: 0.1
+Version: 0.1.0
 Author: Ramoonus
 Author URI: http://www.ramoonus.nl/
 */
