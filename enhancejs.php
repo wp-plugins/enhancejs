@@ -2,15 +2,15 @@
 /*
 Plugin Name: EnhanceJS
 Plugin URI: http://www.ramoonus.nl/wordpress/enhancejs/
-Description: A polyfill for the Adobe's CSS3 proposal for Text enhances (Tested + Works on Chrome, Safari, Firefox, IE 8+) 
-Version: 0.1.0
+Description: EnhanceJS is a new Javascript framework designed to improve the application of Progressive Enhancement by first testing browser capabilities for key Javascript and CSS support before applying advanced styles and scripts to the page. 
+Version: 1.1
 Author: Ramoonus
 Author URI: http://www.ramoonus.nl/
 */
+
 function rw_enhancejs() {
 		wp_deregister_script('enhancejs'); // deregister
-		wp_register_script('enhancejs', plugins_url('/js/enhance.js', __FILE__), false, '20082010'); // re register // 20 aug 2010
-		wp_enqueue_script('enhancejs'); // load
+		wp_enqueue_script('enhancejs', plugins_url('/js/enhance.min.js', __FILE__), false, '1.1');
 } 
 add_action('init', 'rw_enhancejs');
 ?>

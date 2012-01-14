@@ -1,14 +1,16 @@
 === Plugin Name ===
-Contributors: ramoonus
-Donate link: http://www.ramoonus.nl
-Tags: enhance, enhancejs, javascript
-Requires at least: 3.2.0
-Tested up to: 3.0.0
-Stable tag: 0.1.0
+Contributors: Ramoonus
+Donate link: http://www.ramoonus.nl/donate/
+Tags: enhance, enhancejs, javascript, progressive enhancement
+Requires at least: 2.3
+Tested up to: 3.3
+Stable tag: 1.1
 
-JavaScript framework designed to improve the application of Progressive Enhancement by first testing browser capabilities for key Javascript and CSS support before applying advanced styles and scripts to the page.
+EnhanceJS is a new Javascript framework designed to improve the application of Progressive Enhancement.
 == Description ==
-EnhanceJS is a JavaScript framework designed to improve the application of Progressive Enhancement by first testing browser capabilities for key Javascript and CSS support before applying advanced styles and scripts to the page.
+EnhanceJS is a new Javascript framework designed to improve the application of Progressive Enhancement by first testing browser capabilities for key Javascript and CSS support before applying advanced styles and scripts to the page. 
+
+EnhanceJS is developed and maintained by Filament Group, Inc. and was developed as part of the book "Designing With Progressive Enhancement" (Peachpit). 
 
 == Installation ==
 1. Upload `enhancejs/` to the `/wp-content/plugins/` directory
@@ -24,6 +26,13 @@ Its recommended to flush the cache after upgrading.
 Not relevant.
 
 == Changelog ==
+= 1.1 =
+* Based on EnhanceJS 1.1 stable, minified
+* Readme update
+
+= 1.0 = 
+* Non existing version
+
 = 0.1.0 =
 * Based on EnhanceJS 20 august 2010
-* Does nothing! 
+* Initial version

@@ -14,34 +14,6 @@ var settings, body, fakeBody, windowLoaded, head,
 if(doc.getElementsByTagName){ head = doc.getElementsByTagName('head')[0] || docElem; }
 else{ head = docElem; }
 
-//test whether a media query applies
-var mediaquery = (function(){
-	var cache = {},
-		testDiv = doc.createElement('div');
-	
-	testDiv.setAttribute('id','ejs-qtest');
-	return function(q){
-		//check if any media types should be toggled
-		if (cache[q] === undefined) {
-			addFakeBody();
-			var styleBlock = doc.createElement('style');
-			styleBlock.type = "text/css";
-			head.appendChild(styleBlock);
-			/*set inner css text. credit: http://www.phpied.com/dynamic-script-and-style-elements-in-ie/*/
-			var cssrule = '@media '+q+' { #ejs-qtest { position: absolute; width: 10px; } }';
-			if (styleBlock.styleSheet){ styleBlock.styleSheet.cssText = cssrule; }
-			else { styleBlock.appendChild(doc.createTextNode(cssrule)); }     
-			body.appendChild(testDiv);
-			var divWidth = testDiv.offsetWidth;
-			body.removeChild(testDiv);
-			head.removeChild(styleBlock);
-			removeFakeBody();
-			cache[q] = (divWidth == 10);
-		}
-		return cache[q];
-	}
-})();
-
 win.enhance = function(options) {
     options  = options || {};
     settings = {};
@@ -71,8 +43,6 @@ win.enhance = function(options) {
     
     windowLoad(function() { windowLoaded = true; });
 };
-
-enhance.query = mediaquery;
 
 enhance.defaultTests = {
     getById: function() {
@@ -162,10 +132,6 @@ enhance.defaultSettings = {
     forcePassText: 'View high-bandwidth version',
     forceFailText: 'View low-bandwidth version',
     tests: enhance.defaultTests,
-    media: {
-    	'-ejs-desktop': enhance.query('screen and (max-device-width: 1024px)') ? 'not screen and (max-device-width: 1024px)' : 'screen',
-    	'-ejs-handheld': 'screen and (max-device-width: 1024px)'
-    },
     addTests: {},
     alertOnFailure: false,
     onPass: function(){},
@@ -330,19 +296,6 @@ function addIncompleteClass (){
     }
 }
 
-function checkifsupported(ifsupported){
-	if(ifsupported.constructor === Array){ 
-		var allGood = true;
-        for(var item in ifsupported){
-        	if(allGood){ allGood = !!ifsupported[item]; }
-        }   
-        return allGood;
-	}	
-	else {	
-		return !!ifsupported;
-    }
-}
-
 function appendStyles() {
     var index = -1,
         item;
@@ -357,40 +310,26 @@ function appendStyles() {
             head.appendChild(link);
         }
         else {
-        	if(item['media']){
-        		item['media'] = mediaSwitch(item['media']); 
-        		if(settings['media']){
-        			if(settings['media'][item['media']] !== undefined){
-        				item['media'] = settings['media'][item['media']];
-        			}
-        		} 
-        	}
+        	if(item['media']){ item['media'] = mediaSwitch(item['media']); }
         	if(item['excludemedia']){ item['excludemedia'] = mediaSwitch(item['excludemedia']); }
         	
+            for (var attr in item) {
+                if (attr !== 'iecondition' && attr !== 'excludemedia') {
+                    link.setAttribute(attr, item[attr]);
+                }    
+            }
             var applies = true;
             if(item['media'] && item['media'] !== 'print' && item['media'] !== 'projection' && item['media'] !== 'speech' && item['media'] !== 'aural' && item['media'] !== 'braille'){
 	        	applies = mediaquery(item['media']);
 	        }
-            if(applies && item['excludemedia']){
+            if(item['excludemedia']){
             	applies = !mediaquery(item['excludemedia']);
 	        }
-	        if (applies && item['iecondition']) {
+	        if (item['iecondition']) {
                 applies = isIE(item['iecondition']);
             }
-            if(applies && item['ifsupported'] !== undefined){
-            	applies = checkifsupported(item['ifsupported']);
-            	if(!applies && item['fallback'] !== undefined){
-					item['href'] = item['fallback'];
-					applies = true;
-				}
-            }
-	        if(applies){ 	        	
-	        	for (var attr in item) {
-	                if (attr !== 'iecondition' && attr !== 'excludemedia' && attr !== 'ifsupported' && attr !== 'fallback') {
-	                    link.setAttribute(attr, item[attr]);
-	                }    
-	            }
-	            head.appendChild(link); 
+	        if(applies){ 
+	        	head.appendChild(link); 
 	        }
         }
     }
@@ -420,6 +359,35 @@ var isIE = (function() {
 		return cache[cc];
 	}	
 })();
+
+//test whether a media query applies
+var mediaquery = (function(){
+	var cache = {},
+		testDiv = doc.createElement('div');
+	
+	testDiv.setAttribute('id','ejs-qtest');
+	return function(q){
+		//check if any media types should be toggled
+		if (cache[q] === undefined) {
+			addFakeBody();
+			var styleBlock = doc.createElement('style');
+			styleBlock.type = "text/css";
+			/*set inner css text. credit: http://www.phpied.com/dynamic-script-and-style-elements-in-ie/*/
+			var cssrule = '@media '+q+' { #ejs-qtest { position: absolute; width: 10px; } }';
+			if (styleBlock.styleSheet){ styleBlock.styleSheet.cssText = cssrule; }
+			else { styleBlock.appendChild(doc.createTextNode(cssrule)); }     
+			head.appendChild(styleBlock);
+			body.appendChild(testDiv);
+			var divWidth = testDiv.offsetWidth;
+			body.removeChild(testDiv);
+			head.removeChild(styleBlock);
+			removeFakeBody();
+			cache[q] = (divWidth == 10);
+		}
+		return cache[q];
+	}
+})();
+enhance.mediaquery = mediaquery;
 
 function appendScripts(){
 	settings.queueLoading ? appendScriptsSync() : appendScriptsAsync();
@@ -474,45 +442,25 @@ function createScriptTag(item) {
         return script;
     }
     else {
-    	if(item['media']){ 
-    		item['media'] = mediaSwitch(item['media']); 
-    		if(settings['media']){
-    			if(settings['media'][item['media']]){
-    				item['media'] = settings['media'][item['media']];
-    			}
-    		}  
-    	}
+    	if(item['media']){ item['media'] = mediaSwitch(item['media']); }
         if(item['excludemedia']){ item['excludemedia'] = mediaSwitch(item['excludemedia']); }
         	
+        for (var attr in item) {
+            if (attr !== 'iecondition' && attr !== 'media' && attr !== 'excludemedia') {
+            	script.setAttribute(attr, item[attr]);
+            }    
+        }
         var applies = true;
         if(item['media']){
         	applies = mediaquery(item['media']);
         }
-        if(applies && item['excludemedia']){
+        if(item['excludemedia']){
         	applies = !mediaquery(item['excludemedia']);
         }
-        if (applies && item['iecondition']) {
+        if (item['iecondition']) {
                 applies = isIE(item['iecondition']);
         }
-        if(applies && item['ifsupported'] !== undefined){
-        	applies = checkifsupported(item['ifsupported']);
-        	if(!applies && item['fallback'] !== undefined){
-				item['src'] = item['fallback'];
-				applies = true;
-			}
-        }
-        
-        if(applies){
-        	for (var attr in item) {
-            if (attr !== 'iecondition' && attr !== 'media' && attr !== 'excludemedia' && attr !== 'ifsupported' && attr !== 'fallback') {
-	            	script.setAttribute(attr, item[attr]);
-	            }    
-	        }
-	        return script;
-        }
-        else{
-        	return false;
-        }
+        return applies ? script : false;
     }
 }
 
