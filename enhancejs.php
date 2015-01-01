@@ -10,7 +10,7 @@ Author URI: http://www.ramoonus.nl/
 
 function rw_enhancejs() {
 		wp_deregister_script('enhancejs'); // deregister
-		wp_enqueue_script('wp_enqueue_scripts', plugins_url('/js/enhance.js', __FILE__), false, '1.1.1');
-} 
+		wp_enqueue_script('wp_enqueue_scripts', plugins_url('/js/enhance.js', __FILE__), false, '2.0.0');
+}
 add_action('init', 'rw_enhancejs');
 ?>
