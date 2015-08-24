@@ -3,7 +3,7 @@ Contributors: Ramoonus
 Donate link: http://www.ramoonus.nl/donate/
 Tags: enhance, enhancejs, javascript, progressive enhancement, filament group
 Requires at least: 3.9
-Tested up to: 4.1
+Tested up to: 4.3
 Stable tag: 1.1.1
 
 EnhanceJS is a new Javascript framework designed to improve the application of Progressive Enhancement.
